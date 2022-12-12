@@ -2,7 +2,7 @@ from copy import deepcopy
 from random import random
 import sys
 import time
-import airsim
+# import airsim
 import math
 import numpy as np
 
@@ -45,7 +45,7 @@ def compute_path(start,end):
         xyz[1],xyz[2] = y,z
         final_path.append(deepcopy(xyz))
         
-    final_path.append(end.tolist())
+    final_path.append(end.tolist() if type(end) != list else end)
     return final_path
 
 

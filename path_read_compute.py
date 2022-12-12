@@ -2,6 +2,7 @@ import numpy as np
 import airsim
 import time
 import sys
+from move_path_loc import compute_path
 
 
 ## Read the path for the drones and dispatcher location
@@ -26,7 +27,10 @@ right_bottom = client.simSetObjectPose('rightbottomcylinder',airsim.Pose(airsim.
 left_top = client.simSetObjectPose('leftopcylinder',airsim.Pose(airsim.Vector3r(25, 0, 0)))
 right_top = client.simSetObjectPose('rightopcylinder',airsim.Pose(airsim.Vector3r(0, 0, 0)))
 
-belt = client.simSetObjectPose('M_Conveyor_BP', airsim.Pose(airsim.Vector3r(0,0,0)))
+
+chargingstation = client.simSetObjectPose('ChargingStation1',airsim.Pose(airsim.Vector3r(12.5, 36, 0)))
+chargingstation2 = client.simSetObjectPose('ChargingStation2',airsim.Pose(airsim.Vector3r(12.5, -6, 0)))
+belt = client.simSetObjectPose('M_Conveyor_BP_2', airsim.Pose(airsim.Vector3r(12.5,15,0)))
 
 checkValid = lambda x: x[0] and x[1] and x[2]
 end_pos = {}
@@ -70,16 +74,38 @@ end_pos = {(v[0],v[1],v[2]):k for k,v in end_pos.items()}
 print(len(compute_color.keys()))
 print(len(end_pos.keys()))
 
-for i in compute_color:
-    r,g,b = compute_color[i]
-    min_var,closest = np.inf,None
-    for j in end_pos:
-        d = np.linalg.norm(np.array(j)-np.array(i))
-        if d<min_var:
-            min_var,closest = d,j
-    client.simRunConsoleCommand(CONSOLE_COMMAND.format(vehicle_name=end_pos[closest], r=255 * r, g=255 * g, b=255 * b))
+# for i in compute_color:
+#     r,g,b = compute_color[i]
+#     min_var,closest = np.inf,None
+#     for j in end_pos:
+#         d = np.linalg.norm(np.array(j)-np.array(i))
+#         if d<min_var:
+#             min_var,closest = d,j
+#     client.simRunConsoleCommand(CONSOLE_COMMAND.format(vehicle_name=end_pos[closest], r=255 * r, g=255 * g, b=255 * b))
 
     
+    
+##### new part
 
+key = sorted(end_pos.keys(), key = lambda ele: -ele[1])[1]
+print(key)
+drone_name = end_pos[key]
 
-        
+print(drone_name)
+loc = client.simGetObjectPose('M_Conveyor_BP_2')
+print(loc)
+path = compute_path([loc.position.x_val,loc.position.y_val,loc.position.z_val - 2],[key[0],key[1],key[2]])
+    
+client.simRunConsoleCommand(CONSOLE_COMMAND.format(vehicle_name=drone_name, r=255, g=0, b=0))
+path.reverse()
+keys = airsim.Vector3r(key[0],key[1],key[2])
+print(path)
+for i in range(len(path)-1):
+    vec = airsim.Vector3r(path[i][0],path[i][1],path[i][2])
+    client.simSetVehiclePose(airsim.Pose(vec - keys), False, drone_name)
+    time.sleep(1)
+vec = airsim.Vector3r(path[-1][0],path[-1][1],path[-1][2])
+
+client.simSetVehiclePose(airsim.Pose(vec), True, drone_name)
+
+    
