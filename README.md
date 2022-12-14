@@ -1,4 +1,37 @@
-# Static_illumination_using_FLS
+# Static Illuminations using Drones
+
+### Milestones
+- [x] Milestone 1: Environment Setup and Feasibility check
+- [x] Milestone 2: Simulating the MinDist algorithm
+- [x] Milestone 3: Simulating the Quota-Balanced Algorithm
+- [x] Milestone 4: Design the FLS Display Architecture and implement the conveyor belt for garbage collection
+- [x] Milestone 5: Simulation of the charging of the drones and the implementation of the STAG algorithm
+- [x] Milestone 6: Collision Detection and Failure Handling
+- [x] Milestone 7: Analysis
+
+
+**Instructions to run**
+
+Please follow these instructions to run the software:
+
+
+1. Follow this [guide] (https://microsoft.github.io/AirSim/build_macos/) to install Unreal Engine and AirSim for **Mac**. If you are using a different operating system, please follow their instructions.
+2. Clone this repository
+3. Download AirSim_project.zip from Github
+4. Unzip and open AirSimFLS.uproject in unreal editor
+5. Find and replace the settings.json provided by AirSim on your PC with /settings.json in this repository
+6. Install packages listed in requirements.txt
+7. The important files are:
+For Mindist : path_read_compute.py
+For QuotaBalanced-Offline: path_read_compute-quotabalanced.py
+For Quota-Balanced + STAG using apf: apfPathExporter.py
+For Quota-balance + Failure Handling: apfFailurePathGenerator
+8. Click Play in unreal editor
+If running on Windows/Mac/Linux:
+Run python [name of the file based on the task mentioned above]
+
+IMPORTANT: After the code executes, click Stop in unreal editor before executing new code
+
 
 Static Illumination in AirSim using MinDist and Quota Balanced Illumination
 Henil Shelat |  Collaborator: Baladitya Swaika
